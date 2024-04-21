@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Signin from "./components/sign/Signin.tsx";
+import Signup from "./components/sign/Signup.tsx";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/signup", // 회원가입
-    element: "",
+    element: <Signup />,
   },
   {
     path: "/", // 비밀번호 찾기
