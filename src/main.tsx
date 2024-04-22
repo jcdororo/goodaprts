@@ -5,11 +5,17 @@ import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Signin from "./components/sign/Signin.tsx";
 import Signup from "./components/sign/Signup.tsx";
+import Test from "./test/Test.tsx";
+import Layout from "./components/common/Layout.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/", // 메인페이지
-    element: <App />,
+    element: (
+      <Layout>
+        <App />
+      </Layout>
+    ),
   },
   {
     path: "/signin", // 로그인
@@ -54,6 +60,10 @@ const router = createBrowserRouter([
   {
     path: "/", // 판매자 페이지
     element: "",
+  },
+  {
+    path: "/test", // 테스트페이지
+    element: <Test />,
   },
 ]);
 

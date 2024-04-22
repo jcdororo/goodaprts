@@ -12,18 +12,9 @@ import NavigateFindPassword from "./NavigateFindPassword";
 import RevertButton from "../buttons/RevertButton";
 import InputPassword from "./InputPassword";
 import SubmitButton from "../buttons/SubmitButton";
-import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
-interface User {
-  id: string;
-  password: string;
-  email: string;
-  isSeller: boolean;
-  nickname: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { User } from "../../types/user";
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("");
@@ -51,24 +42,11 @@ const Signup = () => {
   const handleStep = async () => {
     if (step === 1) {
       // db에 중복된 이메일이 있는지 확인
-      const users: User[] = [];
-      const q = query(collection(db, "User"));
+      const usersRef = query(collection(db, "User"));
+      const q = query(usersRef, where("email", "==", email));
       const querySnapshot = await getDocs(q);
 
-      querySnapshot.forEach((doc) => {
-        console.log("doc", doc.data());
-        users.push({
-          id: doc.id,
-          password: doc.data().password,
-          email: doc.data().email,
-          isSeller: doc.data().isSeller,
-          nickname: doc.data().nickname,
-          createdAt: doc.data().createdAt,
-          updatedAt: doc.data().updatedAt,
-        });
-      });
-      const isDuplicate = users.filter((x, _) => x.email === email).length === 0;
-      console.log(users);
+      const isDuplicate = querySnapshot.empty;
 
       if (!isDuplicate) {
         alert("중복된 이메일입니다.");
@@ -136,7 +114,7 @@ const Signup = () => {
   return (
     <div className="absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] w-[850px] h-[800px] py-[30px] px-[140px]  rounded-lg border">
       <form onSubmit={handleSubmit}>
-        <Logo />
+        <Logo isLargeSize={true} />
         {/* 사용하실 이메일은 입력하세요 */}
         {step === 1 && (
           <>

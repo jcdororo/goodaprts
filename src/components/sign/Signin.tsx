@@ -24,7 +24,6 @@ const Signin = () => {
     setIsValidEmail(isValidateEmail(email));
   }, [email]);
 
-  const handleStep = () => {};
   const handleKeydownStep = () => {};
 
   const handleSigninSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -38,9 +37,9 @@ const Signin = () => {
     }
   };
   return (
-    <div className="absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] w-[850px] h-[800px] py-[30px] px-[140px] my-[-10vh] rounded-lg border">
+    <div className="absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] w-[850px] h-[800px] py-[30px] px-[140px] rounded-lg border">
       <form onSubmit={handleSigninSubmit}>
-        <Logo />
+        <Logo isLargeSize={true} />
 
         <Explanation text={explaneText} />
         <InputInfo title="이메일" stateObject={email} setStateObject={setEmail} onKeyDown={handleKeydownStep} placeholder="your@email.com" />
