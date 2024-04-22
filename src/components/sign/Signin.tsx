@@ -1,4 +1,4 @@
-import ConfirmButton from "../buttons/ConfirmButton";
+import { FormEvent } from "react";
 import Logo from "../logo/Logo";
 import Explanation from "./Explanation";
 import InputInfo from "./InputInfo";
@@ -27,19 +27,19 @@ const Signin = () => {
   const handleStep = () => {};
   const handleKeydownStep = () => {};
 
-  const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSigninSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert("로그인성공");
       navigate("/");
     } catch (error) {
-      throw new Error(error);
+      console.log(error);
     }
   };
   return (
     <div className="absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] w-[850px] h-[800px] py-[30px] px-[140px] my-[-10vh] rounded-lg border">
-      <form onSubmit={handleLoginSubmit}>
+      <form onSubmit={handleSigninSubmit}>
         <Logo />
 
         <Explanation text={explaneText} />

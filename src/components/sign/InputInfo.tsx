@@ -1,16 +1,16 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, KeyboardEvent, ChangeEvent } from "react";
 import ExitButton from "../buttons/ExitButton";
 
 interface props {
   title: string;
   stateObject: any;
   setStateObject: Dispatch<SetStateAction<string>>;
-  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
   placeholder: string;
 }
 
 const InputInfo = ({ title, stateObject, setStateObject, onKeyDown, placeholder }: props) => {
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setStateObject(e.target.value);
   };
 

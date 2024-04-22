@@ -1,5 +1,6 @@
+import { MouseEvent } from "react";
 const NavigateFindPassword = () => {
-  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
   };
 

@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, KeyboardEvent, FormEvent } from "react";
 import { auth, db } from "../../services/firebase";
 import Logo from "../logo/Logo";
 import GoogleIcon from "../../../public/icon/googleIcon.png";
@@ -12,8 +12,18 @@ import NavigateFindPassword from "./NavigateFindPassword";
 import RevertButton from "../buttons/RevertButton";
 import InputPassword from "./InputPassword";
 import SubmitButton from "../buttons/SubmitButton";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+
+interface User {
+  id: string;
+  password: string;
+  email: string;
+  isSeller: boolean;
+  nickname: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("");
@@ -38,7 +48,34 @@ const Signup = () => {
   }, [password, passwordConfirm]);
 
   // 마우스로 누를 때
-  const handleStep = () => {
+  const handleStep = async () => {
+    if (step === 1) {
+      // db에 중복된 이메일이 있는지 확인
+      const users: User[] = [];
+      const q = query(collection(db, "User"));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        console.log("doc", doc.data());
+        users.push({
+          id: doc.id,
+          password: doc.data().password,
+          email: doc.data().email,
+          isSeller: doc.data().isSeller,
+          nickname: doc.data().nickname,
+          createdAt: doc.data().createdAt,
+          updatedAt: doc.data().updatedAt,
+        });
+      });
+      const isDuplicate = users.filter((x, _) => x.email === email).length === 0;
+      console.log(users);
+
+      if (!isDuplicate) {
+        alert("중복된 이메일입니다.");
+        return;
+      }
+    }
+
     if ((step === 1 || step === 2) && isValidEmail) {
       setStep(step + 1);
       return;
@@ -51,7 +88,7 @@ const Signup = () => {
   };
 
   // 키보드 enter키로 누를 때
-  const handleKeydownStep = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeydownStep = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.type === "keydown" && e.key !== "Enter") {
       return; // 키 이벤트 중 Enter 키가 아니면 무시
     }
@@ -68,16 +105,14 @@ const Signup = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("누름");
     if (step != 4 || !isValidEmail || !isValidPassword || nickname == "") {
       return;
     }
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(userCredential.user.uid);
       await setDoc(doc(db, "User", userCredential.user.uid), {
         // id: 0,
         email: email,
@@ -93,44 +128,13 @@ const Signup = () => {
     }
   };
 
-  const onChange = (event: any) => {
-    const {
-      target: { name, value },
-    } = event;
-    if (name === "email") {
-      setEmail(value);
-    }
-    if (name === "password") {
-      setPassword(value);
-    }
-  };
-
-  const signUp = (event: any) => {
-    event.preventDefault();
-    const signUp = async () => {
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log(userCredential);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-  };
-
-  const signIn = (event: any) => {
-    event.preventDefault();
-  };
-  const logOut = (event: any) => {
-    event.preventDefault();
-  };
-
   const explaneTextStep1 = "사용하실 이메일을 입력하세요";
   const explaneTextStep2 = "이 이메일은 새로 가입할 수 있는 이메일 입니다. 계속하시겠습니까?";
   const explaneTextStep3 = "비밀번호를 설정해 주세요";
   const explaneTextStep4 = "닉네임을 입력해주세요";
 
   return (
-    <div className="absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] w-[850px] h-[800px] py-[30px] px-[140px] my-[-10vh] rounded-lg border">
+    <div className="absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] w-[850px] h-[800px] py-[30px] px-[140px]  rounded-lg border">
       <form onSubmit={handleSubmit}>
         <Logo />
         {/* 사용하실 이메일은 입력하세요 */}
