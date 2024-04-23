@@ -9,6 +9,7 @@ import Test from "./test/Test.tsx";
 import Layout from "./components/common/Layout.tsx";
 import Products from "./pages/Products.tsx";
 import Edit from "./pages/seller/Edit.tsx";
+import ProductDetail from "./components/products/ProductDetail.tsx";
 
 const router = createBrowserRouter([
   {
@@ -61,7 +62,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/product/:id", // 상품 상세 페이지
-    element: "",
+    element: (
+      <Layout>
+        <ProductDetail />
+      </Layout>
+    ),
   },
   {
     path: "/seller/edit", // 판매자 물건등록, 수정페이지

@@ -1,5 +1,23 @@
+import { useEffect, useState } from "react";
+import { readMajorCategory } from "../../api/product/readMajorCategory";
+
 const MajorCategory = () => {
-  return <h1>대분류</h1>;
+  const [majorCategories, setMajorCategories] = useState([]);
+
+  useEffect(() => {
+    (async function () {
+      const readMajorCategories = (await readMajorCategory()) as [];
+      setMajorCategories(readMajorCategories);
+    })();
+  }, []);
+
+  return (
+    <div className="flex gap-4">
+      {majorCategories.map((x, _) => (
+        <div key={x}>{x}</div>
+      ))}
+    </div>
+  );
 };
 
 export default MajorCategory;
