@@ -61,7 +61,7 @@ const router = createBrowserRouter([
     element: "",
   },
   {
-    path: "/product/:id", // 상품 상세 페이지
+    path: "/products/:id", // 상품 상세 페이지
     element: (
       <Layout>
         <ProductDetail />
