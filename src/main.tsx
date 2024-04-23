@@ -60,7 +60,7 @@ const router = createBrowserRouter([
     element: "",
   },
   {
-    path: "/", // 상품 상세 페이지
+    path: "/product/:id", // 상품 상세 페이지
     element: "",
   },
   {

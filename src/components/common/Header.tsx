@@ -13,7 +13,7 @@ const Header = () => {
   const handleSignOut = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await signOut(auth);
-    setUser({ id: "", password: "", email: "", isSeller: false, nickname: "", createdAt: new Date(), updatedAt: new Date() });
+    setUser({});
   };
 
   useEffect(() => {

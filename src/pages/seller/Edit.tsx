@@ -1,12 +1,32 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, MouseEvent, FormEvent, useState } from "react";
 import Options from "../../components/seller/Options";
+import ExitButton from "../../components/buttons/ExitButton";
+import { v4 as uuidv4 } from "uuid";
+import { ProductOptions } from "../../types/product";
+import { createProduct } from "../../api/product/createProduct";
+import { userData } from "../../zustand/store";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../../services/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+
 const Edit = () => {
   const [majorCategory, setMajorCategory] = useState("");
   const [middleCategory, setMiddleCategory] = useState("");
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
-  const [options, setOptions] = useState<[][]>([[]]);
+  const [productImage, setproductImage] = useState([]);
+  const [options, setOptions] = useState<ProductOptions[]>([]);
+  const { user } = userData();
+  const navigate = useNavigate();
 
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
+  });
+
+  // [옵션이름, 금액, 수량];
   const handleMajorCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMajorCategory(e.target.value);
   };
@@ -24,13 +44,53 @@ const Edit = () => {
   };
 
   const handleAddOption = () => {
-    setOptions([...options, []]);
-    console.log(options);
+    const temp = { id: uuidv4(), productId: "", optionName: "", price: 0, quantity: 0 };
+    setOptions((prevOptions: ProductOptions[]) => [...prevOptions, temp]);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleExitButton = (_e: MouseEvent<HTMLDivElement>, i: number) => {
+    setOptions([...options.filter((_: any, index: number) => index !== i)]);
+  };
+
+  const handleOptions = (_e: MouseEvent<HTMLDivElement>, index: number, tempOptions: ProductOptions) => {
+    if (!checkInput(tempOptions)) {
+      return;
+    }
+    setOptions([...options.slice(0, index), tempOptions, ...options.slice(index + 1)]);
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("SUBMIT !");
+    if (options.length == 0) {
+      alert("옵션은 1개이상 필수 입니다.");
+      return;
+    }
+
+    for (let i = 0; i < options.length; i++) {
+      if (!checkInput(options[i])) {
+        return;
+      }
+    }
+
+    const tempProduct = {
+      id: "",
+      majorCategory,
+      middleCategory,
+      productImage,
+      productName,
+      sellerId: user.id,
+      createAt: new Date(),
+      updateAt: new Date(),
+    };
+
+    const tempProductOptions = options;
+    const isCreated = await createProduct(tempProduct, tempProductOptions);
+
+    if (isCreated) {
+      alert("저장 성공");
+    } else {
+      alert("저장 실패");
+    }
   };
 
   return (
@@ -45,8 +105,14 @@ const Edit = () => {
       <div>
         상품이름 : <input value={productName} onChange={handleProductNameChange} />
       </div>
-      {options.map((x, i) => (
-        <Options key={i} index={i} options={options} setOptions={setOptions} />
+      {options.map((option: ProductOptions, i: number) => (
+        <div key={option.id}>
+          <Options uniqueKey={option.id} index={i} handleOptions={handleOptions} />
+
+          <div onClick={(e) => handleExitButton(e, i)}>
+            <ExitButton />
+          </div>
+        </div>
       ))}
       <div onClick={handleAddOption}>옵션추가하기 +</div>
       <div>
@@ -58,3 +124,22 @@ const Edit = () => {
 };
 
 export default Edit;
+
+function checkInput(obj: ProductOptions) {
+  if (!obj.optionName) {
+    alert("옵션 이름을 입력하세요");
+    return false;
+  }
+
+  if (!obj.price) {
+    alert("상품 가격을 입력하세요");
+    return false;
+  }
+
+  if (!obj.quantity) {
+    alert("상품 수량을 입력하세요");
+    return false;
+  }
+
+  return true;
+}

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { User } from "../types/user";
 
 interface UserDataStore {
-  user: User | {};
+  user: User;
   setUser: (userInfo: User) => void;
 }
 
