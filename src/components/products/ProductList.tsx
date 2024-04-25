@@ -16,7 +16,7 @@ const ProductList = () => {
   }, []);
 
   const handleProductClick = (productId: string) => {
-    navigate(`/product/${productId}`); // 예를 들어 제품 상세 페이지로 네비게이션
+    navigate(`/products/${productId}`); // 예를 들어 제품 상세 페이지로 네비게이션
   };
 
   return (
