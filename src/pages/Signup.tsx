@@ -121,8 +121,8 @@ const Signup = () => {
             <InputInfo title="이메일" stateObject={email} setStateObject={setEmail} onKeyDown={handleKeydownStep} placeholder="your@email.com" />
             {isValidEmail ? <div className="text-blue-400 font-bold">유효한 이메일입니다! </div> : <div className="text-red-400 font-bold">유효하지 않은 이메일입니다.</div>}
 
-            <div className="absolute w-[570px] bottom-4">
-              <ConfirmButton text="다음" onClick={handleStep} />
+            <div className="absolute bottom-4">
+              <ConfirmButton width="570px" text="다음" onClick={handleStep} />
               <NavigateFindPassword />
               <div className="border-b-2 border-gray-300 border-solid " />
               <div className="flex justify-center mt-[20px]">
@@ -136,8 +136,8 @@ const Signup = () => {
           <>
             <div className="text-gray-400 text-xl mt-[30px] mb-[-30px]">{email.toString()}</div>
             <Explanation text={explaneTextStep2} />
-            <div className="absolute w-[570px] bottom-4">
-              <ConfirmButton text="계속하기" onClick={handleStep} />
+            <div className="absolute bottom-4">
+              <ConfirmButton width="570px" text="계속하기" onClick={handleStep} />
               <RevertButton text="이전" onClick={handleRevertStep} />
             </div>
           </>
@@ -159,8 +159,8 @@ const Signup = () => {
             </div>
             <InputPassword title="새로운 비밀번호 확인" stateObject={passwordConfirm} setStateObject={setPasswordConfirm} onKeyDown={handleKeydownStep} />
             {isValidPasswordConfirm ? <div className="text-blue-400 font-bold">비밀번호가 일치합니다 </div> : <div className="text-red-400 font-bold">비밀번호가 일치하지 않습니다. 다시 확인해주세요</div>}
-            <div className="absolute w-[570px] bottom-4">
-              <ConfirmButton text="다음" onClick={handleStep} />
+            <div className="absolute bottom-4">
+              <ConfirmButton width="570px" text="다음" onClick={handleStep} />
               <RevertButton text="이전" onClick={handleRevertStep} />
             </div>
           </>
