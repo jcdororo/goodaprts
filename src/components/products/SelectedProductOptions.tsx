@@ -14,8 +14,9 @@ const SelectedProductOptions = ({ productDetail, handleSelectOption, handleOrder
   return (
     <>
       <select onChange={handleSelectOption}>
+        <option disabled>옵션선택</option>
         {productDetail?.options.map((x: ProductOptions, i: number) => (
-          <option>{x.optionName}</option>
+          <option key={x.optionName}>{x.optionName}</option>
         ))}
       </select>
     </>

@@ -5,8 +5,13 @@ export interface Product {
   productImage: string[];
   productName: string;
   sellerId: string | undefined;
+  representativePrice: number;
   createAt: Date;
   updateAt: Date;
+}
+
+export interface ProductWithOptions extends Product {
+  options?: {}[];
 }
 
 export interface ProductOptions {
@@ -15,4 +20,8 @@ export interface ProductOptions {
   optionName: string;
   price: number;
   quantity: number;
+}
+
+export interface SelectedOption extends ProductOptions {
+  orderQuantity?: number;
 }

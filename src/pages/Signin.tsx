@@ -32,7 +32,8 @@ const Signin = () => {
       alert("로그인성공");
       navigate("/");
     } catch (error) {
-      console.log(error);
+      alert("로그인 실패");
+      console.log("로그인에러", error);
     }
   };
   return (

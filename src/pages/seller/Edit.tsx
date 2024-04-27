@@ -16,9 +16,11 @@ const Edit = () => {
   const [productDescription, setProductDescription] = useState("");
   const [productImage, setproductImage] = useState([]);
   const [options, setOptions] = useState<ProductOptions[]>([]);
+  const [representativePrice, setRepresentativePrice] = useState<number>(0);
   const { user } = userData();
   const navigate = useNavigate();
 
+  console.log("options", options);
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       navigate("/signin");
@@ -59,10 +61,19 @@ const Edit = () => {
     setOptions([...options.slice(0, index), tempOptions, ...options.slice(index + 1)]);
   };
 
+  const representativePriceChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setRepresentativePrice(Number(e.currentTarget.value));
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (options.length == 0) {
       alert("옵션은 1개이상 필수 입니다.");
+      return;
+    }
+
+    if (representativePrice == 0) {
+      alert("대표가격 입력은 필수 입니다.");
       return;
     }
 
@@ -78,6 +89,7 @@ const Edit = () => {
       middleCategory,
       productImage,
       productName,
+      representativePrice,
       sellerId: user.id,
       createAt: new Date(),
       updateAt: new Date(),
@@ -117,6 +129,14 @@ const Edit = () => {
       <div onClick={handleAddOption}>옵션추가하기 +</div>
       <div>
         상품설명 : <input value={productDescription} onChange={handleProductDescriptionChange} />
+      </div>
+      <div>
+        대표가격 :{" "}
+        <select className="w-[100px]" onChange={representativePriceChange}>
+          {options.map((x, i) => (
+            <option key={x.id}>{x.price ? x.price : ""}</option>
+          ))}
+        </select>
       </div>
       <button type="submit">저장하기</button>
     </form>

@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import { readProductDetail } from "../../api/product/readProductDetail";
 import ProductOptions from "./ProductInfos";
 import ProductDescription from "./ProductDescription";
-import { DocumentData } from "firebase/firestore";
+import { ProductWithOptions } from "../../types/product";
 
 const ProductDetail = () => {
   const { productId } = useParams<string>();
-  const [productDetail, setProductDetail] = useState<DocumentData | undefined>(undefined);
+  const [productDetail, setProductDetail] = useState<ProductWithOptions | undefined>(undefined);
 
   useEffect(() => {
     if (productId) {

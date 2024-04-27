@@ -1,16 +1,8 @@
-import { DocumentData, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../services/firebase";
-import { ProductOptions } from "../../types/product";
+import { Product } from "../../types/product";
 
-interface Result {
-  id: string;
-  majorCategory: string;
-  middleCategory: string;
-  productImage: string[];
-  productName: string;
-  sellerId: string | undefined;
-  createAt: Date;
-  updateAt: Date;
+interface Result extends Product {
   options?: {}[];
 }
 
@@ -19,6 +11,7 @@ export const readProductDetail = async (productId: string) => {
     const docRef = doc(db, "Product", productId);
     const docSnap = await getDoc(docRef);
     let result = { ...docSnap.data() } as Result;
+    console.log("result", result);
 
     const productOptionsRef = collection(db, "ProductOptions");
     const optionsQuery = query(productOptionsRef, where("id", "==", productId));
@@ -26,7 +19,6 @@ export const readProductDetail = async (productId: string) => {
     const querySnapshot = await getDocs(optionsQuery);
     const options: {}[] | undefined = [];
     querySnapshot.forEach((doc) => {
-      console.log("doc data", doc.data());
       options.push({ ...doc.data() });
     });
     result["options"] = options;
