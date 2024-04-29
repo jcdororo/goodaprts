@@ -5,7 +5,7 @@ const MajorCategory = () => {
   const [majorCategories, setMajorCategories] = useState([]);
 
   useEffect(() => {
-    (async function () {
+    (async () => {
       const readMajorCategories = (await readMajorCategory()) as [];
       setMajorCategories(readMajorCategories);
     })();

@@ -10,6 +10,8 @@ import Layout from "./components/common/Layout.tsx";
 import Products from "./pages/Products.tsx";
 import Edit from "./pages/seller/Edit.tsx";
 import ProductDetail from "./components/products/ProductDetail.tsx";
+import Seller from "./pages/seller/Seller.tsx";
+import ProductEdit from "./pages/seller/productId/ProductEdit.tsx";
 
 const router = createBrowserRouter([
   {
@@ -77,8 +79,20 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/", // 판매자 페이지
-    element: "",
+    path: "/seller/:sellerId", // 판매자 페이지
+    element: (
+      <Layout>
+        <Seller />
+      </Layout>
+    ),
+  },
+  {
+    path: "/seller/:sellerId/:productId", // 판매자 페이지
+    element: (
+      <Layout>
+        <ProductEdit />
+      </Layout>
+    ),
   },
   {
     path: "/test", // 테스트페이지

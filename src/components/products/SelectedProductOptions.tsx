@@ -13,8 +13,8 @@ const SelectedProductOptions = ({ productDetail, handleSelectOption, handleOrder
 
   return (
     <>
-      <select onChange={handleSelectOption}>
-        <option disabled>옵션선택</option>
+      <select onChange={handleSelectOption} className="font-bold text-[16px] w-[100%]  h-[34px] my-[2px] bg-gray-200">
+        <option>옵션선택</option>
         {productDetail?.options.map((x: ProductOptions, i: number) => (
           <option key={x.optionName}>{x.optionName}</option>
         ))}

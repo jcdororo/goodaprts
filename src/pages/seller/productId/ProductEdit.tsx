@@ -1,17 +1,20 @@
-import { ChangeEvent, MouseEvent, FormEvent, useState, useRef, useCallback } from "react";
-import Options from "../../components/seller/Options";
-import ExitButton from "../../components/buttons/ExitButton";
+import { ChangeEvent, MouseEvent, FormEvent, useState, useRef, useEffect } from "react";
+import Options from "../../../components/seller/Options";
+import ExitButton from "../../../components/buttons/ExitButton";
 import { v4 as uuidv4 } from "uuid";
-import { ProductOptions } from "../../types/product";
-import { createProduct } from "../../api/product/createProduct";
-import { userData } from "../../zustand/store";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../../services/firebase";
+import { ProductOptions, ProductWithOptions } from "../../../types/product";
+import { createProduct } from "../../../api/product/createProduct";
+import { userData } from "../../../zustand/store";
+import { useNavigate, useParams } from "react-router-dom";
+import { auth } from "../../../services/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { uploadImgToFirestorage } from "../../api/product/uploadImgToFirestorage";
-import UploadImages from "../../components/seller/UploadImages";
+import { uploadImgToFirestorage } from "../../../api/product/uploadImgToFirestorage";
+import UploadImages from "../../../components/seller/UploadImages";
+import { readProductDetail } from "../../../api/product/readProductDetail";
 
-const Edit = () => {
+const ProductEdit = () => {
+  const { sellerId, productId } = useParams();
+  console.log(sellerId, productId);
   const [majorCategory, setMajorCategory] = useState("");
   const [middleCategory, setMiddleCategory] = useState("");
   const [productName, setProductName] = useState("");
@@ -31,6 +34,21 @@ const Edit = () => {
       return;
     }
   });
+
+  useEffect(() => {
+    (async () => {
+      const productInfos = (await readProductDetail(productId!)) as ProductWithOptions;
+      console.log("tempasdasdasd", productInfos);
+      setMajorCategory(productInfos.majorCategory);
+      setMiddleCategory(productInfos.middleCategory);
+      setProductName(productInfos.productName);
+      // setProductDescription()
+      setImgPreview(productInfos.productImage);
+      setRepresentativePrice(productInfos.representativePrice);
+
+      setOptions(productInfos.options);
+    })();
+  }, [sellerId, productId]);
 
   // [옵션이름, 금액, 수량];
   const handleMajorCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +110,7 @@ const Edit = () => {
     // 이미지파일 업로드
     const productImageURLs = [];
     for (const file of imgFiles) {
-      const url = await uploadImgToFirestorage(file, uuidv4());
+      const url = await uploadImgToFirestorage(file, file.name);
       productImageURLs.push(url);
     }
 
@@ -127,10 +145,10 @@ const Edit = () => {
     }
   };
 
-  const handleRemoveImgPreview = useCallback((_e: MouseEvent<HTMLDivElement>, idx: number) => {
+  const handleRemoveImgPreview = (_e: MouseEvent<HTMLDivElement>, idx: number) => {
     setImgPreview(imgPreview.filter((_x, i) => i !== idx));
     setImgFiles(imgFiles.filter((_x, i) => i !== idx));
-  }, []);
+  };
 
   const handleImgRefClick = () => {
     uploadRef.current?.click();
@@ -180,7 +198,7 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default ProductEdit;
 
 function checkInput(obj: ProductOptions) {
   if (!obj.optionName) {

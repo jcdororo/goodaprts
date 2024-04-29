@@ -1,6 +1,6 @@
 import { useEffect, useState, MouseEvent } from "react";
 import Logo from "../logo/Logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "../../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -9,6 +9,7 @@ import { userData } from "../../zustand/store";
 const Header = () => {
   const [signed, setSigned] = useState(false);
   const { user, setUser } = userData();
+  const navigate = useNavigate();
 
   const handleSignOut = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -53,6 +54,9 @@ const Header = () => {
           <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]">카트</li>
           <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]">마이페이지</li>
           <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]">공지사항</li>
+          <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]" onClick={() => navigate(`/seller/${user.id}`)}>
+            판매자페이지
+          </li>
           <li>고객센터</li>
         </ul>
         <ul className="flex flex-row gap-[10px]">
