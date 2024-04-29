@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, FormEvent, useState } from "react";
+import { ChangeEvent, MouseEvent, FormEvent, useState, useRef } from "react";
 import Options from "../../components/seller/Options";
 import ExitButton from "../../components/buttons/ExitButton";
 import { v4 as uuidv4 } from "uuid";
@@ -8,6 +8,7 @@ import { userData } from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../services/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { uploadImgToFirestorage } from "../../api/product/uploadImgToFirestorage";
 
 const Edit = () => {
   const [majorCategory, setMajorCategory] = useState("");
@@ -15,12 +16,14 @@ const Edit = () => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productImage, setproductImage] = useState([]);
+  const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [options, setOptions] = useState<ProductOptions[]>([]);
   const [representativePrice, setRepresentativePrice] = useState<number>(0);
+  const uploadRef = useRef<HTMLInputElement>(null);
+  const [imgPreview, setImgPreview] = useState<string[]>([]);
   const { user } = userData();
   const navigate = useNavigate();
 
-  console.log("options", options);
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       navigate("/signin");
@@ -62,6 +65,9 @@ const Edit = () => {
   };
 
   const representativePriceChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    if (Number(e.currentTarget.value) == 0) {
+      return;
+    }
     setRepresentativePrice(Number(e.currentTarget.value));
   };
 
@@ -82,12 +88,18 @@ const Edit = () => {
         return;
       }
     }
+    // 이미지파일 업로드
+    const productImageURLs = [];
+    for (const file of imgFiles) {
+      const url = await uploadImgToFirestorage(file, file.name);
+      productImageURLs.push(url);
+    }
 
     const tempProduct = {
       id: "",
       majorCategory,
       middleCategory,
-      productImage,
+      productImage: productImageURLs,
       productName,
       representativePrice,
       sellerId: user.id,
@@ -101,13 +113,45 @@ const Edit = () => {
     if (isCreated) {
       alert("저장 성공");
     } else {
-      alert("저장 실패");
+      alert("저장 실패" + isCreated);
     }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      const previewUrl = URL.createObjectURL(files[0]);
+      setImgPreview([...imgPreview, previewUrl]);
+      setImgFiles([...imgFiles, files[0]]);
+    }
+  };
+
+  const handleRemoveImgPreview = (_e: MouseEvent<HTMLDivElement>, idx: number) => {
+    setImgPreview(imgPreview.filter((_x, i) => i !== idx));
+    setImgFiles(imgFiles.filter((_x, i) => i !== idx));
+  };
+
+  const handleImgRefClick = () => {
+    uploadRef.current?.click();
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-[1100px]  bg-cyan-100 mx-[auto]">
-      <div className="w-[200px] h-[200px] bg-cyan-300">사진업로드</div>
+      <div className="grid grid-cols-3 gap-4">
+        {imgPreview.map((x, i) => (
+          <div key={x} className="relative">
+            <img src={x} alt="imgPreview" className="w-[430px] h-[510px] bg-cyan-300" />
+            <div className="absolute right-0 top-0" onClick={(e) => handleRemoveImgPreview(e, i)}>
+              <ExitButton />
+            </div>
+          </div>
+        ))}
+        <div className="w-[430px] h-[510px] bg-cyan-300" onClick={handleImgRefClick}>
+          업로드하기
+        </div>
+      </div>
+      <input type="file" accept=".jpg, .jpeg, .png" ref={uploadRef} className="hidden" onChange={handleInputChange} />
+
       <div>
         대분류 : <input value={majorCategory} onChange={handleMajorCategoryChange} />
       </div>
@@ -133,6 +177,7 @@ const Edit = () => {
       <div>
         대표가격 :{" "}
         <select className="w-[100px]" onChange={representativePriceChange}>
+          <option>0</option>
           {options.map((x, i) => (
             <option key={x.id}>{x.price ? x.price : ""}</option>
           ))}
