@@ -1,10 +1,9 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
-const Options = ({ uniqueKey, index, handleOptions }: any) => {
-  const [optionName, setOptionName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(0);
-  const [options, setOptions] = useState({});
+const Options = ({ uniqueKey, index, handleOptions, optionNameProp = "", priceProp = 0, quantityProp = 0 }: any) => {
+  const [optionName, setOptionName] = useState(optionNameProp);
+  const [price, setPrice] = useState(priceProp);
+  const [quantity, setQuantity] = useState(quantityProp);
   const tempOptions = useRef({});
   useEffect(() => {
     const temp = {

@@ -11,6 +11,7 @@ export const uploadImgToFirestorage = async (file: Blob | ArrayBuffer, fileName:
   }
   // 파일 URL 가져오기
   const downloadURL = await getDownloadURL(imageRef);
+  console.log("downloadURL", downloadURL);
 
-  return downloadURL;
+  return { fileName, downloadURL };
 };

@@ -21,7 +21,7 @@ const Edit = () => {
   const [options, setOptions] = useState<ProductOptions[]>([]);
   const [representativePrice, setRepresentativePrice] = useState<number>(0);
   const uploadRef = useRef<HTMLInputElement>(null);
-  const [imgPreview, setImgPreview] = useState<string[]>([]);
+  const [imgPreview, setImgPreview] = useState<{ downloadURL: string; fileName: string }[]>([]);
   const { user } = userData();
   const navigate = useNavigate();
 
@@ -92,8 +92,8 @@ const Edit = () => {
     // 이미지파일 업로드
     const productImageURLs = [];
     for (const file of imgFiles) {
-      const url = await uploadImgToFirestorage(file, uuidv4());
-      productImageURLs.push(url);
+      const { fileName, downloadURL } = await uploadImgToFirestorage(file, uuidv4());
+      productImageURLs.push({ fileName, downloadURL });
     }
 
     const tempProduct = {
@@ -122,7 +122,7 @@ const Edit = () => {
     const files = e.target.files;
     if (files && files[0]) {
       const previewUrl = URL.createObjectURL(files[0]);
-      setImgPreview([...imgPreview, previewUrl]);
+      setImgPreview([...imgPreview, { downloadURL: previewUrl, fileName: files[0].toString() }]);
       setImgFiles([...imgFiles, files[0]]);
     }
   };

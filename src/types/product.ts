@@ -2,7 +2,7 @@ export interface Product {
   id: string;
   majorCategory: string;
   middleCategory: string;
-  productImage: string[];
+  productImage: {}[];
   productName: string;
   sellerId: string | undefined;
   representativePrice: number;
