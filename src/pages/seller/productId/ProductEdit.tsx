@@ -34,6 +34,7 @@ const ProductEdit = () => {
 
   const [deletePictures, setDeletePictures] = useState([]);
   const [deleteOptions, setDeleteOptions] = useState([]);
+  const [createAt, setCreateAt] = useState(new Date());
 
   onAuthStateChanged(auth, (user) => {
     if (!user) {
@@ -55,6 +56,7 @@ const ProductEdit = () => {
         setRepresentativePrice(productInfos.representativePrice);
 
         setOptions(productInfos.options);
+        setCreateAt(productInfos.createAt);
       }
     })();
   }, [sellerId, productId]);
@@ -143,7 +145,7 @@ const ProductEdit = () => {
       productName,
       representativePrice,
       sellerId: user.id,
-      createAt: new Date(),
+      createAt: createAt,
       updateAt: new Date(),
     };
     console.log("tempasdasd", tempProduct, "pre", imgPreview);
