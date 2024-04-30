@@ -23,12 +23,11 @@ const Seller = () => {
   };
 
   const handleDeleteProduct = (productId: string) => {
-    // alert(`Are you sure you want to delete`);
-    console.log(productId);
     const sureDelete = confirm("정말 상품을 삭제하시겠습니까 ?");
 
     if (sureDelete) {
       deleteProduct(productId);
+      alert("상품이 삭제되었습니다 !");
     }
   };
 
