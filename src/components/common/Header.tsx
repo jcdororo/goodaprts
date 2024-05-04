@@ -54,8 +54,8 @@ const Header = () => {
           <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]">카트</li>
           <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]">마이페이지</li>
           <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]">공지사항</li>
-          <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]" onClick={() => navigate(`/seller/${user.id}`)}>
-            판매자페이지
+          <li className="after:absolute after:content-['|'] after:pl-[3px] after:translate-y-[-2px]">
+            <Link to={`/seller/${user.id}`}>판매자페이지</Link>
           </li>
           <li>고객센터</li>
         </ul>
@@ -63,6 +63,7 @@ const Header = () => {
           {signed ? (
             <li>
               <button onClick={handleSignOut}>로그아웃</button>
+              <Link to={`/cart/${user.id}`}>장바구니</Link>
             </li>
           ) : (
             <>

@@ -6,6 +6,8 @@ import SelectedProductOptions from "./SelectedProductOptions";
 import OptionHandle from "./OptionHandle";
 import { v4 as uuidv4 } from "uuid";
 import { ProductOptions } from "../../types/product";
+import { userData } from "../../zustand/store";
+import { createCart } from "../../api/cart/createCart";
 
 interface Props {
   productDetail: DocumentData | undefined;
@@ -18,8 +20,7 @@ interface SelectedOption extends ProductOptions {
 const ProductInfos = ({ productDetail }: Props) => {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
-
-  console.log("productDetail", productDetail);
+  const { user, setUser } = userData();
 
   useEffect(() => {
     let total = 0;
@@ -44,14 +45,33 @@ const ProductInfos = ({ productDetail }: Props) => {
     }
   };
 
-  const handleSelectCancelOption = (e: MouseEvent<HTMLDivElement>, index: number) => {
+  const handleSelectCancelOption = (_e: MouseEvent<HTMLDivElement>, index: number) => {
     setSelectedOptions([...selectedOptions.filter((_, i) => i !== index)]);
   };
   const handleOrderQuantity = (temp: SelectedOption, index: number) => {
     setSelectedOptions([...selectedOptions.slice(0, index), temp, ...selectedOptions.slice(index + 1)]);
   };
 
-  const handleAddCart = () => {};
+  const handleAddCart = () => {
+    if (selectedOptions.length === 0) {
+      alert("옵션을 선택은 필수 입니다.");
+      return;
+    }
+    const cartInfo = {
+      productId: productDetail?.id,
+      productName: productDetail?.productName,
+      sellerId: productDetail?.sellerId,
+      buyerId: user.id,
+      productImage: productDetail?.productImage,
+      createdAt: new Date(),
+      selectedOptions: selectedOptions,
+      totalPrice,
+    };
+    createCart(cartInfo);
+    // console.log("cartInfo", cartInfo);
+    // console.log("productdetail", productDetail);
+    // console.log("selected options", selectedOptions);
+  };
 
   return (
     <div className="flex h-[650px] mt-[20px]">

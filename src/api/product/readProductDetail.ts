@@ -11,7 +11,6 @@ export const readProductDetail = async (productId: string) => {
     const docRef = doc(db, "Product", productId);
     const docSnap = await getDoc(docRef);
     let result = { ...docSnap.data() } as Result;
-    console.log("result", result);
 
     const productOptionsRef = collection(db, "ProductOptions");
     const optionsQuery = query(productOptionsRef, where("id", "==", productId));

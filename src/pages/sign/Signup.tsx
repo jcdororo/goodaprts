@@ -1,19 +1,19 @@
 import { useEffect, useState, KeyboardEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { isValidateEmail } from "../utils/isValidateEmail";
-import { isValidatePassword } from "../utils/isValidPassword";
 import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
-import { auth, db } from "../services/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import Logo from "../components/logo/Logo";
-import Explanation from "../components/sign/Explanation";
-import InputInfo from "../components/sign/InputInfo";
-import ConfirmButton from "../components/buttons/ConfirmButton";
-import NavigateFindPassword from "../components/sign/NavigateFindPassword";
-import RevertButton from "../components/buttons/RevertButton";
-import InputPassword from "../components/sign/InputPassword";
-import SubmitButton from "../components/buttons/SubmitButton";
-import GoogleIcon from "../../public/icon/googleIcon.png";
+import GoogleIcon from "../../../public/icon/googleIcon.png";
+import { isValidateEmail } from "../../utils/isValidateEmail";
+import { isValidatePassword } from "../../utils/isValidPassword";
+import { auth, db } from "../../services/firebase";
+import Logo from "../../components/logo/Logo";
+import Explanation from "../../components/sign/Explanation";
+import InputInfo from "../../components/sign/InputInfo";
+import ConfirmButton from "../../components/buttons/ConfirmButton";
+import NavigateFindPassword from "../../components/sign/NavigateFindPassword";
+import RevertButton from "../../components/buttons/RevertButton";
+import InputPassword from "../../components/sign/InputPassword";
+import SubmitButton from "../../components/buttons/SubmitButton";
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("");

@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Signin from "./pages/Signin.tsx";
-import Signup from "./pages/Signup.tsx";
+import Signin from "./pages/sign/Signin.tsx";
+
 import Test from "./test/Test.tsx";
 import Layout from "./components/common/Layout.tsx";
 import Products from "./pages/Products.tsx";
@@ -12,6 +12,8 @@ import Edit from "./pages/seller/Edit.tsx";
 import ProductDetail from "./components/products/ProductDetail.tsx";
 import Seller from "./pages/seller/Seller.tsx";
 import ProductEdit from "./pages/seller/productId/ProductEdit.tsx";
+import Cart from "./pages/cart/Cart.tsx";
+import Signup from "./pages/sign/Signup.tsx";
 
 const router = createBrowserRouter([
   {
@@ -43,8 +45,12 @@ const router = createBrowserRouter([
     element: "",
   },
   {
-    path: "/", // 장바구니
-    element: "",
+    path: "/cart/:buyerId", // 장바구니
+    element: (
+      <Layout>
+        <Cart />
+      </Layout>
+    ),
   },
   {
     path: "/", // 주문내역
