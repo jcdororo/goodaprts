@@ -11,6 +11,6 @@ export interface Cart {
     orderQuantity: number;
     price: number;
     quantity: number;
-  };
+  }[];
   totalPrice: number;
 }

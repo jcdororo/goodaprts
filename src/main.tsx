@@ -12,7 +12,7 @@ import Edit from "./pages/seller/Edit.tsx";
 import ProductDetail from "./components/products/ProductDetail.tsx";
 import Seller from "./pages/seller/Seller.tsx";
 import ProductEdit from "./pages/seller/productId/ProductEdit.tsx";
-import Cart from "./pages/cart/Cart.tsx";
+import Cart from "./pages/cart/CartSection.tsx";
 import Signup from "./pages/sign/Signup.tsx";
 
 const router = createBrowserRouter([
