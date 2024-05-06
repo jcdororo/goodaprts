@@ -48,6 +48,7 @@ const CartSection = () => {
 
     if (updatedCartInfo[index].selectedOptions.length === 0) {
       deleteCart("s");
+      // 여기 개발해야됨 !!!!!!!!!!!!!!!!!!!!!!!!
     }
 
     if (updatedCartInfo[index].selectedOptions.length > 0) {
